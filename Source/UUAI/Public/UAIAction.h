@@ -65,6 +65,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category ="Utility AI")
 	bool RequestExecute(const UObject* ContextObject) const;
 
+	/**
+	 * 	@brief	stop executing this action
+	* 	@todo	Add a "Reason" 
+	 */
+	UFUNCTION(BlueprintCallable, Category ="Utility AI")
+	void EndExecute() const;
+
 
 protected:
 
@@ -92,6 +99,7 @@ protected:
 	bool CanExecute(const UObject* ContextObject) const;
 	virtual bool  CanExecute_Implementation(const UObject* ContextObject) const;
 
+
 protected:
 
 	/**
@@ -108,10 +116,10 @@ protected:
 
 	/** Event to broacast execution of this action */
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere)
-	FOnActionEvent OnExecute;
+	FOnActionEvent OnStartExecution;
 
 	/** Event to broacast the end of execution of this action */
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere)
-	FOnActionEvent OnStop;
+	FOnActionEvent OnStopExecution;
 
 };

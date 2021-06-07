@@ -32,16 +32,21 @@ float UUAIAction::GetUtilityScore(const UObject* ContextObject) const
     return utility_value_sum;
 }
 
-
 bool UUAIAction::RequestExecute(const UObject* ContextObject) const
 {
     bool bShouldExecute = CanExecute(ContextObject);
     if (bShouldExecute)
     {
+        OnStartExecution.Broadcast();
         NativeExecute(ContextObject);
         Execute(ContextObject);
     }
     return bShouldExecute;
+}
+
+void UUAIAction::EndExecute() const
+{
+    OnStopExecution.Broadcast();
 }
 
 void UUAIAction::NativeExecute(const UObject* ContextObject) const

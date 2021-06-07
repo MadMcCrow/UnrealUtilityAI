@@ -4,11 +4,41 @@
 
 
 // Sets default values
-UUAIComponent::UUAIComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UUAIComponent::UUAIComponent(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), 	bCanExecuteSimultaneous(), bCanStopRunningAction(),  MinUtilityScore(0.f)
 {
 	
 }
 
+
+void UUAIComponent::TickComponent(float DeltaTime,  ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
+{
+    Super::TickComponent( DeltaTime,  TickType, ThisTickFunction);
+
+    // if we are not doing anything, check if we should
+    if (!IsExecutingAction())
+    {
+        UUAIAction* Action = GetBestAction();
+        if (Action->GetUtilityScore(this)  >= MinUtilityScore)
+        {
+            ExecuteAction(Action);
+        }
+    }
+    else 
+    {
+        if (bCanExecuteSimultaneous || bCanStopRunningAction) // those two situations are exclusives, for now
+        {
+           UUAIAction* Action = GetBestAction();
+            if (Action != CurrentlyRunningAction)
+            {
+                if (bCanStopRunningAction)
+                {
+                    CurrentlyRunningAction->EndExecute();
+                }
+                ExecuteAction(Action);
+            }
+        }
+    }
+}
 
 UUAIAction* UUAIComponent::GetBestAction() const
 {
@@ -36,5 +66,9 @@ UUAIAction* UUAIComponent::GetBestAction() const
 
 void UUAIComponent::ExecuteAction(UUAIAction* Todo)
 {
-    Todo->RequestExecute(this);
+    if (Todo)
+    {
+        Todo->RequestExecute(this);
+        CurrentlyRunningAction = Todo;
+    }
 }
