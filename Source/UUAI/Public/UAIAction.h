@@ -38,7 +38,7 @@ public:
  * 	@class	UAIAction
  * 	@brief	An Action is a thing the AI can do with a way to calculate it's utility value
  */
-UCLASS(Category = "UUAI|Base", Blueprintable, BlueprintType, EditInlineNew)
+UCLASS(Abstract, Category = "UUAI|Base", Blueprintable, BlueprintType, EditInlineNew)
 class UUAI_API UUAIAction : public UObject
 {
 	GENERATED_BODY()
@@ -55,15 +55,42 @@ public:
 	UFUNCTION(BlueprintCallable, Category ="Utility AI")
 	float GetUtilityScore(const UObject* ContextObject) const;
 
+
+	/**
+	 * 	@brief	check if this can run and start execute
+	 * 			This is meant to implement further checks, 
+	 * 	@note 	Instead of using this, use the broadcast event to implement tasks in actors instead
+	 * 	@note	this will appear as a function and not as a Event due to constness
+	 */
+	UFUNCTION(BlueprintCallable, Category ="Utility AI")
+	bool RequestExecute(const UObject* ContextObject) const;
+
+
+protected:
+
 	/**
 	 * 	@brief	Execute this action command
-	 * 			This is meant to implement further checks, bells and whistle to the system
+	 */
+	virtual void NativeExecute(const UObject* ContextObject) const;
+
+
+
+	/**
+	 * 	@brief	Execute this action command
+	 * 			This is meant to implement how this action is done, bells and whistle to the system
 	 * 	@note 	Instead of using this, use the broadcast event to implement tasks in actors instead
 	 * 	@note	this will appear as a function and not as a Event due to constness
 	 */
 	UFUNCTION(BlueprintImplementableEvent, Category ="Utility AI")
 	void Execute(const UObject* ContextObject) const;
 
+	/**
+	 * 	@brief	Simple function to test if action can be executed
+	 * 	@note	this will appear as a function and not as a Event due to constness
+	 */
+	UFUNCTION(BlueprintNativeEvent, Category ="Utility AI")
+	bool CanExecute(const UObject* ContextObject) const;
+	virtual bool  CanExecute_Implementation(const UObject* ContextObject) const;
 
 protected:
 

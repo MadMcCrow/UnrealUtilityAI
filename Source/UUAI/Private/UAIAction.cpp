@@ -19,7 +19,7 @@ float UUAIAction::GetUtilityScore(const UObject* ContextObject) const
     {
         if (itr.ConditionObject != nullptr)
         {
-            const float raw_value = itr.ConditionObject->Eval(ContextObject);
+            const float raw_value = itr.ConditionObject->Evaluate(ContextObject);
             float curve_adjusted_value = raw_value;
             if (itr.WeightCurve != nullptr)
             {
@@ -30,4 +30,26 @@ float UUAIAction::GetUtilityScore(const UObject* ContextObject) const
         }
     }
     return utility_value_sum;
+}
+
+
+bool UUAIAction::RequestExecute(const UObject* ContextObject) const
+{
+    bool bShouldExecute = CanExecute(ContextObject);
+    if (bShouldExecute)
+    {
+        NativeExecute(ContextObject);
+        Execute(ContextObject);
+    }
+    return bShouldExecute;
+}
+
+void UUAIAction::NativeExecute(const UObject* ContextObject) const
+{
+    // do nothing, for now
+}
+
+bool UUAIAction::CanExecute_Implementation(const UObject* ContextObject) const
+{
+    return true;
 }

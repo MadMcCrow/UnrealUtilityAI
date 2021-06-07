@@ -5,7 +5,7 @@
 #include "UObject/Object.h"
 #include "UAICondition.generated.h"
 
-UCLASS(Category = "UUAI|Base", BlueprintType, Blueprintable, EditInlineNew)
+UCLASS(Abstract, Category = "UUAI|Base", BlueprintType, Blueprintable, EditInlineNew)
 class UUAI_API UUAICondition : public UObject
 {
 	GENERATED_BODY()
@@ -33,7 +33,7 @@ protected:
 
 public:
 
-	FORCEINLINE float Eval(const UObject* ContextObject) const {return NativeEvaluateCondition(ContextObject);} 
+	FORCEINLINE float Evaluate(const UObject* ContextObject) const {return NativeEvaluateCondition(ContextObject);} 
 	
 
 };

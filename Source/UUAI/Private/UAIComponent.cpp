@@ -36,5 +36,5 @@ UUAIAction* UUAIComponent::GetBestAction() const
 
 void UUAIComponent::ExecuteAction(UUAIAction* Todo)
 {
-    
+    Todo->RequestExecute(this);
 }
